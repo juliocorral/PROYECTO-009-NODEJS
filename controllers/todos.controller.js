@@ -7,16 +7,8 @@ export const getTodos = (req = request, res = response) => {
 }
 
 export const getTodoById = (req = request, res = response) => {
-    const todo = todosModel.getTodoById(Number(req.params.id.trim()));
-
-    if (todo) {
-        return res.status(200).json(todo);        
-    }
-
-    return res.status(404).json({
-        success: false,
-        message: "Tarea no encontrada",
-    });
+    const todo = todosModel.getTodoById(req.params.id);
+    return res.status(200).json(todo);        
 }
 
 export const createTodo = (req = request, res = response) => {
@@ -39,14 +31,7 @@ export const createTodo = (req = request, res = response) => {
 }
 
 export const updateTodo = (req = request, res = response) => {
-    const found = todosModel.getTodoById(Number(req.params.id.trim()));
-
-    if (!found) {
-      return res.status(404).json({
-            success: false,
-            message: "Tarea no encontrada",
-        });      
-    }
+    const found = todosModel.getTodoById(req.params.id);
 
     // Comprobamos que el título de la tarea no esté vacío, sino devolvemos un mensaje de error
     const newTitle = req.body.title?.trim();
@@ -57,28 +42,33 @@ export const updateTodo = (req = request, res = response) => {
         });
     }
     // Actualizamos el título de la tarea encontrada con los datos del body de la petición
-    todosModel.updateTodo(Number(req.params.id.trim()), newTitle);
+    const updatedTodo = todosModel.updateTodo(req.params.id, newTitle);
+
+    if (!updatedTodo) {
+        return res.status(500).json({
+            success: false,
+            message: "Error al actualizar la tarea",
+        });
+    }
 
     // Devolvemos la tarea actualizada
     return res.status(200).json({
         success: true,
-        data: todosModel.getTodoById(Number(req.params.id.trim()))  ,
+        data: updatedTodo,
     });    
 }
 
 export const deleteTodo = (req = request, res = response) => {
-    const found = todosModel.getTodoById(Number(req.params.id.trim()));
-
-    // Sino encontramos la tarea, devolvemos un mensaje de error   
-    if (!found) {
-        return res.status(404).json({
-            success: false,
-            message: "Tarea no encontrada",
-        });
-    }
+    const found = todosModel.getTodoById(req.params.id);
 
     // Eliminamos todos la tarea de la lista y devolvemos un mensaje de éxito
-    const deletedTodo = todosModel.deleteTodo(Number(req.params.id.trim()));
+    const deletedTodo = todosModel.deleteTodo(req.params.id);
+    if (!deletedTodo) {
+        return res.status(500).json({
+            success: false,
+            message: "Error al eliminar la tarea",
+        });
+    }
 
     // Devolvemos la tarea eliminada y la lista actualizada
     return res.status(200).json({
