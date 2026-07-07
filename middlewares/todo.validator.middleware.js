@@ -1,15 +1,15 @@
 const todoValidator = (schema) => {
     return (req, res, next) => {
-        const { error, data } = schema.safeParse(req.body);
+        const result = schema.safeParse(req.body);
 
-        if (error) {
+        if (!result.success) {
             return res.status(400).json({
                 success: false,
-                message: error.errors[0].message,
+                message: result.error.issues[0].message || "Error de validación",
             });
         }
 
-        req.body = data;
+        req.body = result.data;
         next();
     };
 };
