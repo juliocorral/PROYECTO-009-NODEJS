@@ -28,3 +28,14 @@ app.listen(port, () => {
     console.log(`Arrancando servidor en localhost:${port}`);
 });
 
+// Closure: Función que recibe un parámetero y devuelve otra función que tiene acceso a ese parámetro.
+function sumar(a) {
+    console.log("Valor de a:", a);
+    return (b, c) => {
+        console.log("Valor de a,b,c:", { a, b, c });
+        return a + b + c;
+    };
+}
+const sum1 = sumar(1);
+sum1(2, 3); // 6
+
