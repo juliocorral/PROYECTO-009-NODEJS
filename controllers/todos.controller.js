@@ -12,17 +12,7 @@ export const getTodoById = (req = request, res = response) => {
 }
 
 export const createTodo = (req = request, res = response) => {
-    const title = req.body.title?.trim();
-
-    // Comprobamos que el título de la tarea no esté vacío, sino devolvemos un mensaje de error
-    if (!title) {
-        return res.status(400).json({
-            success: false,
-            message: "El título de la tarea es requerido",
-        });
-    }
-
-    const newTodo = todosModel.createTodo(title);
+    const newTodo = todosModel.createTodo(req.body.title);
 
     res.status(201).json({
         success: true,
@@ -31,18 +21,8 @@ export const createTodo = (req = request, res = response) => {
 }
 
 export const updateTodo = (req = request, res = response) => {
-    const found = todosModel.getTodoById(req.params.id);
-
-    // Comprobamos que el título de la tarea no esté vacío, sino devolvemos un mensaje de error
-    const newTitle = req.body.title?.trim();
-    if (!newTitle) {
-        return res.status(400).json({
-            success: false,
-            message: "El título de la tarea es requerido",
-        });
-    }
     // Actualizamos el título de la tarea encontrada con los datos del body de la petición
-    const updatedTodo = todosModel.updateTodo(req.params.id, newTitle);
+    const updatedTodo = todosModel.updateTodo(req.params.id, req.body.title);
 
     if (!updatedTodo) {
         return res.status(500).json({
