@@ -2,6 +2,7 @@ import express from 'express';
 import { logger } from './middlewares/logger.js';
 import { todosRouter } from './routes/todos.route.js';
 import { homeRouter } from './routes/home.route.js';
+import authRouter from './routes/auth.route.js';
 
 // Creamos la instancia
 const app = express();
@@ -19,7 +20,11 @@ app.use(logger);
 
 
 // RUTAS
+// Registramos las rutas de tareas
 app.use("/todos", todosRouter);
+// Registramos las rutas de autenticación
+app.use("/auth", authRouter);
+
 app.use("/", homeRouter);
 
 app.use((req, res) => {

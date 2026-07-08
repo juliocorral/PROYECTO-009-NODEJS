@@ -49,7 +49,6 @@ export const updateTodo = async (id, title, completed) => {
     return { id, title, completed };
 };
 
-
 export const deleteTodo = async (todo) => {
     const [result] = await pool.execute('DELETE FROM todos WHERE id = ?', [todo.id]);
 
