@@ -5,6 +5,7 @@ import todoIdValidator from "../middlewares/todoId.validator.middleware.js";
 import existsTodo from "../middlewares/existsTodo.middleware.js";
 import todoValidator from "../middlewares/todo.validator.middleware.js";
 import createTodoSchema from "../schemas/createTodo.schema.js";
+import updateTodoSchema from "../schemas/updateTodo.schema.js";
 
 export const todosRouter = Router();
 
@@ -20,7 +21,7 @@ todosRouter.get("/:id", existsTodo, getTodoById);
 todosRouter.post("/", todoValidator(createTodoSchema), createTodo);
 
 // UPDATE
-todosRouter.put("/:id", existsTodo, todoValidator, updateTodo);
+todosRouter.put("/:id", existsTodo, todoValidator(updateTodoSchema), updateTodo);
 
 // DELETE
 todosRouter.delete("/:id", existsTodo, deleteTodo);

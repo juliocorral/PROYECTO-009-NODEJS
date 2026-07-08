@@ -21,7 +21,7 @@ export const createTodo = (title) => {
     return newTodo;
 }
 
-export const updateTodo = (id, title) => {
+export const updateTodo = (id, title, completed) => {
     const todo = getTodoById(id);
 
     // Sino encontramos la tarea, devolvemos null
@@ -30,6 +30,12 @@ export const updateTodo = (id, title) => {
     // Actualizamos el título de la tarea encontrada con los datos del body de la petición
     const found = todos.findIndex((currentTodo) => currentTodo.id === todo.id);
     todos[found].title = title;
+    //todos[found].completed = completed ?? todos[found].completed;
+
+    if (completed) {
+        todos[found].completed = completed;
+    }
+
     return todos[found];
 }
 

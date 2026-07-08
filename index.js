@@ -22,6 +22,13 @@ app.use(logger);
 app.use("/todos", todosRouter);
 app.use("/", homeRouter);
 
+app.use((req, res) => {
+    return res.status(404).json({
+        success: false,
+        message: "Ruta no encontrada"
+    });
+});
+
 
 // Iniciar el servidor y escuchar en el puerto especificado
 app.listen(port, () => {

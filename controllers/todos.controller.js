@@ -22,7 +22,7 @@ export const createTodo = (req = request, res = response) => {
 
 export const updateTodo = (req = request, res = response) => {
     // Actualizamos el título de la tarea encontrada con los datos del body de la petición
-    const updatedTodo = todosModel.updateTodo(req.params.id, req.body.title);
+    const updatedTodo = todosModel.updateTodo(req.params.id, req.body.title, req.body.completed);
 
     if (!updatedTodo) {
         return res.status(500).json({
