@@ -12,6 +12,5 @@ export const registerUserSchema = z.object({
     password: z
         .string("La contraseña es requerida")
         .trim()
-        .min(8, "La contraseña debe tener al menos 8 caracteres")
-        .regex(/[0-9]/, "La contraseña debe contener al menos un número")
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial")
 });
