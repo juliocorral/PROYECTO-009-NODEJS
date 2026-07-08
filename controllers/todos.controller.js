@@ -1,18 +1,18 @@
 import { request, response } from "express";
 import * as todosModel from "../models/todos.model.js";
 
-export const getTodos = (req = request, res = response) => {
-    const todos = todosModel.getTodos();
+export const getTodos = async (req = request, res = response) => {
+    const todos = await todosModel.getTodos();
     res.status(200).json(todos);
 }
 
-export const getTodoById = (req = request, res = response) => {
-    const todo = todosModel.getTodoById(req.params.id);
+export const getTodoById = async (req = request, res = response) => {
+    const todo = await todosModel.getTodoById(req.params.id);
     return res.status(200).json(todo);        
 }
 
-export const createTodo = (req = request, res = response) => {
-    const newTodo = todosModel.createTodo(req.body.title);
+export const createTodo = async (req = request, res = response) => {
+    const newTodo = await todosModel.createTodo(req.body.title);
 
     res.status(201).json({
         success: true,
@@ -20,9 +20,13 @@ export const createTodo = (req = request, res = response) => {
     });
 }
 
-export const updateTodo = (req = request, res = response) => {
+export const updateTodo = async (req = request, res = response) => {
+    const id = req.params.id;
+    const title = req.body.title;
+    const completed = req.body.completed ?? req.todo.completed;
+
     // Actualizamos el título de la tarea encontrada con los datos del body de la petición
-    const updatedTodo = todosModel.updateTodo(req.params.id, req.body.title, req.body.completed);
+    const updatedTodo = await todosModel.updateTodo(id, title, completed);
 
     if (!updatedTodo) {
         return res.status(500).json({
@@ -38,11 +42,10 @@ export const updateTodo = (req = request, res = response) => {
     });    
 }
 
-export const deleteTodo = (req = request, res = response) => {
-    const found = todosModel.getTodoById(req.params.id);
+export const deleteTodo = async (req = request, res = response) => {
+   // Eliminamos todos la tarea de la lista y devolvemos un mensaje de éxito
+    const deletedTodo = await todosModel.deleteTodo(req.todo);
 
-    // Eliminamos todos la tarea de la lista y devolvemos un mensaje de éxito
-    const deletedTodo = todosModel.deleteTodo(req.params.id);
     if (!deletedTodo) {
         return res.status(500).json({
             success: false,
@@ -53,7 +56,6 @@ export const deleteTodo = (req = request, res = response) => {
     // Devolvemos la tarea eliminada y la lista actualizada
     return res.status(200).json({
         success: true,
-        data: deletedTodo[0],
-        todos: todosModel.getTodos(),
+        data: deletedTodo
     });        
 }
