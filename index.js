@@ -4,6 +4,7 @@ import { todosRouter } from './routes/todos.route.js';
 import { homeRouter } from './routes/home.route.js';
 import authRouter from './routes/auth.route.js';
 import authMiddleware from './middlewares/auth.midddleware.js';
+import helmet from 'helmet';
 
 // Creamos la instancia
 const app = express();
@@ -11,6 +12,7 @@ const port = process.env.PORT;
 
 
 // MIDDLEWARES
+app.use(helmet());
 app.set("view engine", "hbs");
 app.set("views", "./views");
 app.use(express.static("public"));

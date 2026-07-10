@@ -5,13 +5,24 @@ import { loginController, registerController } from "../controllers/auth.control
 import { loginSchema } from "../schemas/login.schema.js";
 import adminAuthMiddleware from "../middlewares/admin.auth.middleware.js";
 import authMiddleware from "../middlewares/auth.midddleware.js";
+import rateLimit from "express-rate-limit";
 
 const authRouter = Router();
 
-authRouter.post("/login", todoValidator(loginSchema), loginController);
+const authRateLimit = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    limit: 3,
+});
 
 authRouter.post(
-    "/register", 
+    "/login",
+    authRateLimit,
+    todoValidator(loginSchema), 
+    loginController
+);
+
+authRouter.post(
+    "/register",
     authMiddleware,
     adminAuthMiddleware,
     todoValidator(registerUserSchema), 

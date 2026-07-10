@@ -4,7 +4,7 @@ const adminAuthMiddleware = (req, res, next) => {
     if (req.user.rol !== Roles.ADMIN) {
         return res.status(401).json({
             success: false,
-            message: "No tienes permisos de administrador"
+            message: "No tienes privilegios de administrador"
         }); 
     };
     return next();
