@@ -1,15 +1,15 @@
-const authValidator = (schema) => {
-    return (req, res, next) => {
-        const result = schema.safeParse(req.body);
+import Roles from "../config/Roles.js";
 
-        if (!result.success) {
-            return res.status(400).json({
-                success: false,
-                message: result.error.issues[0].message || "Error de validación",
-            });
-        }
-
-        req.body = result.data;
-        next();
+const adminAuthMiddleware = (req, res, next) => {
+    if (req.user.rol !== Roles.ADMIN) {
+        return res.status(401).json({
+            success: false,
+            message: "No tienes permisos de administrador"
+        }); 
     };
+    return next();
 };
+
+export default adminAuthMiddleware;
+
+
