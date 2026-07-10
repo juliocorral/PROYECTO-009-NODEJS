@@ -2,7 +2,16 @@ import { success } from 'zod';
 import { isValidToken } from '../services/jwt.services.js';
 
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.authorization?.split(" ")[1];
+    const authorization = req.headers.authorization;
+
+    if (!authorization?.startsWith("Bearer ")) {
+        return res.status(401).json({
+            success: false,
+            message: "Token requerido"
+        });  
+    }
+
+    const token = authorization.replace("Bearer ", "").trim();
 
     // Comnprobar que el token llegue al cliente
     if (!token) {
@@ -14,24 +23,16 @@ const authMiddleware = (req, res, next) => {
 
     const payload = isValidToken(token);
 
-    if (!payload) {
-        return res.status(401).json({
-            success: false,
-            message: "El token es invalido"
-        });
+    // Si el token es válido
+    if (payload) {
+        req.user = payload;
+        return next();
     }
 
-    const isExpires = Date.now() > Date(payload.exp);
-
-    // Si el token es valido y no ha expirado lo dejamos pasar
-    if (isExpires) {
-        return res.status(401).json({
-            success: false,
-            message: "El token ha expirado"
-        });
-    }
-
-    next();    
+    return res.status(401).json({
+        success: false,
+        message: "El token es invalido o ha expirado"
+    });  
 };
 
 export default authMiddleware;
