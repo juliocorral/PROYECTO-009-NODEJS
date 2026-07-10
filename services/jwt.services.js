@@ -11,8 +11,8 @@ export const createToken = (payload) => {
 
 export const isValidToken = (token) => {
     try {
-        const isValid = jwt.verify(token, process.env.JWT_SECRET);
-        return isValid.payload;
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        return payload;
     } catch(error) {
         return null;
     }
